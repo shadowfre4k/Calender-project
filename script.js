@@ -15,17 +15,26 @@ $(function () {
   // past, present, and future classes? How can Day.js be used to get the
   // current hour in 24-hour time?
 
-  var thisHour = dayjs().format("H");
+  //function for time timer
+  function updateTime() {
+    const dateElement = $("#currentDay"); //search for element
+    const currentDate = dayjs().format("dddd, MMMM D, YYYY | hh:mm:ss A"); //instantiate timer
+    dateElement.text(currentDate); //appened timer to the element
+  }
 
   function textEntry() {
     $(".btn").on("click", function () {
-      const hourId = $(this).parent().attr("id");
-      const hourText = $(this).siblings(".col-8").val();
-      localStorage.setItem(hourId, hourText);
-      console.log(hourId);
+      //create an event listener for my save button on click
+      const hourId = $(this).parent().attr("id"); // finds the instance hours ID
+      const hourText = $(this).siblings(".col-8").val(); // finds the instance of the hour that respons to the text box
+      localStorage.setItem(hourId, hourText); //we're going to store the text and the ID in our local storage
+      console.log(hourId); // log to confirm
       console.log(hourText);
     });
   }
+  textEntry(); //evoke to check
+  updateTime(); //evoke to check
+  setInterval(updateTime, 1000); //set timer to make time current
 
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
