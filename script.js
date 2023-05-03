@@ -32,6 +32,13 @@ $(function () {
       console.log(hourText);
     });
   }
+
+  $(".time-block").each(function () {
+    //searches for time-block class in HTML
+    const key = $(this).attr("id"); //seaches for the current instances ID attribute and value
+    const value = localStorage.getItem(key); //will grab the corresponding key from local storage that matches ID
+    $(this).children(".description").val(value); //grabs value from the key we just grabbed
+  });
   textEntry(); //evoke to check
   updateTime(); //evoke to check
   setInterval(updateTime, 1000); //set timer to make time current
