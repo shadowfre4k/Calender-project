@@ -3,23 +3,39 @@
 // in the html.
 
 $(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
+  const currentHour = dayjs().format("H"); // set variable for time counter
+  function hourlyColor() {
+    // function is to determine the states to set up color
+    $(".time-block").each(function () {
+      // search for time-block class and
+      const blockHour = parseInt(this.id); //for each one compare to current time to set its state
+      $(this).toggleClass("past", blockHour < currentHour);
+      $(this).toggleClass("present", blockHour === currentHour);
+      $(this).toggleClass("future", blockHour > currentHour);
+      console.log(parseInt(this.id)); //log to check can delete
+    });
+  }
+
+  // removes the classes that it is not based on its blockHour state and adds the proper one
+  function refreshColor() {
+    $(".time-block").each(function () {
+      const blockHour = parseInt(this.id);
+      if (blockHour == currentHour) {
+        $(this).removeClass("past future").addClass("present");
+      } else if (blockHour < currentHour) {
+        $(this).removeClass("future present").addClass("past");
+      } else {
+        $(this).removeClass("past present").addClass("future");
+      }
+    });
+  }
 
   //function for time timer
   function updateTime() {
     const dateElement = $("#currentDay"); //search for element
     const currentDate = dayjs().format("dddd, MMMM D, YYYY | hh:mm:ss A"); //instantiate timer
     dateElement.text(currentDate); //appened timer to the element
+    refreshColor();
   }
 
   function textEntry() {
@@ -39,18 +55,9 @@ $(function () {
     const value = localStorage.getItem(key); //will grab the corresponding key from local storage that matches ID
     $(this).children(".description").val(value); //grabs value from the key we just grabbed
   });
-  textEntry(); //evoke to check
-  updateTime(); //evoke to check
-  setInterval(updateTime, 1000); //set timer to make time current
 
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
+  setInterval(updateTime, 1000); //update time every second
+  textEntry();
+  hourlyColor();
+  updateTime();
 });
-// console.log($(".container-lg").children().eq(0));
-
-// console.log(nineAm.className.split(" "));
-// nineAmClass = nineAm.className.split(" ");
-// console.log(nineAmClass[2]);
